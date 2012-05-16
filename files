@@ -1,0 +1,10 @@
+Written / printed correspondence and edits:
+
+0000:0000 is the form for file categorization. These can be abbreviated with leading zeros lopped off as you would do in an ipv6 address. (i.e. ::0 for 0000:0000, ::3 for 0000:0003, ::b6 for 0000:00b6, etc.
+
+File numbers currently in use -- if you take one, add it in and FILE IT!!!!!
+
+::0 - RESERVED
+::1 - RESERVED 
+::2 - RESERVED
+::3 - byron - Written Edits - partially committed as master ceb11de
