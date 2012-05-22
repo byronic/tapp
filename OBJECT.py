@@ -2,7 +2,8 @@
 #  Defines a generic game object.
 #  Versatile enough to carry, use, have conversations with, ...
 #  You can also think of it as an interactive object.
-#
+# 
+# TODO: Polish-wise (and this applies everywhere) -- look into how wide the dos-box / linux bash is so that we can clean up input. POLISH POLISH POLISH.
 # TAPP
 # COMPANY_NAME
 # Byron L Lagrone
@@ -13,11 +14,11 @@ class OBJECT:
 	#      and are in the form _canAcquire, _canUse, _isSwitch, _isDoor, _canMove... etc
 	#      only 'is' or 'can' and then a thing, as demonstrated ^^
 	# States of an object is in the states variable, which may or may not be used depending on object
-	_canAcquire = False	#Can the player pick up the object and put it into inventory?
+	_canAcquire = False	#Can the player pick up the object and put it into inventory? 
 	_canUse = False		#Can the object be used by the player (i.e. use x, wear x, put x on like it was a hat, etc
 	_isConsumable = False 	#Does using the object destroy it?
 	_isStatic = False	#Is the object forever bound to the room it is in? If so, we'll call it 'static'
-	_inRoom = True		#Is the object not in inventory and in its origin room? ROOMDB needs this
+	_inRoom = True		#Is the object not in inventory and in its origin room? ROOMDB needs this :: Byron note; I think this is just straight up 'is it in a room' or not, not necessarily the origin room
 	_canTalk = False	#Can you have a conversation with this?
 	_conversationID = -99	#Conversation ID
 

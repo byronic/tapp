@@ -27,6 +27,11 @@ class ROOMDB:
 	prevID = 7 #the previous room
 	exits = ['west','north','east', 'dennis'] # human-readable
 	exitIDs = [0, 3, 2, 94] #these correspond to exits[0,1...n]
+#TODO: Thoughts re: locking a room. Add a locks[] list corresponding to exitIDs/exits and check for the necessary object in the player's inventory or keyring. -- should the keyring be separate?? -- so you would have, say, locks[4] instead of a static locks[total number of rooms in the game] and if locks is non-zero it could be the OBJECTDB object number for easy checks. So, example:
+#	exitIDs = [1, 2, 3]
+#       locks = [0, 0, 41] # meaning 0 = unlocked, nonzero = OBJECTDB index of object that unlocks the door or indicates it is unlocked
+#	Then, in go(_exit), add code that checks the lock as part of the iteration
+#	Then, in main, add code that spits a verbose message if the door was locked instead of nonexistent
 	description = "You are standing in a dark room. Obvious exits are {0}, {1}, {2} and {e}.".format(exits[0], exits[1], exits[2], e=exits[3])
 	objects = []
 #TODO: Check to see if there is a way to automagically
@@ -84,21 +89,15 @@ class ROOMDB:
 				if obj._roomID == rID:
 					ROOMDB.objects.append(OBJECTDB[counter])
 
-#TODO: bug here due to OBJECTDB iteration when it should be ROOMDB.objects iteration
-#       experimentally made the change
-#       How is it changing in ROOMDB? Current behavior does not match with current code
-#BUG: 1) Object appears to acquire successfully but is still shown as in the room;
-#           To fix, remove the object from the ROOMDB.objects list
-#BUG: 2) Since we are only changing it in ROOMDB.objects (which _should be_ frequently recreated -- check this!!!!!)
-#           why is it not re-appearing once we exit and re-enter the room? is it getting changed
-#           in the main objects database somehow? Perhaps create a sandbox branch to test with verbose debugging?
 	@staticmethod
-	def get(objword): #if an object is in the room and acquirable, returns True, otherwise returns False!
+	def get(objword): #if an object is in the room and acquirable, sets related object package and returns True, otherwise returns False!
 		for (counter, obj) in enumerate(ROOMDB.objects):
 			if objword == obj._word:
 				if obj._inRoom and obj._canAcquire:
 					ROOMDB.objects[counter]._inRoom = False
 					ROOMDB.objects[counter]._roomID = -99
+# added ROOMDB.objects.pop(counter) to resolve objects-in-room-description after being picked up bug
+					ROOMDB.objects.pop(counter)
 					return counter
 		return -99
 	
