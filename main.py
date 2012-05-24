@@ -4,26 +4,26 @@
 #  Contains main game loop
 #
 # TAPP
-# COMPANY_NAME
+# Tidy Productions / Shiny Bitter Studios
 # Byron L Lagrone
-#
+# Mike Robertson
 
 import ROOMDB
 from INVENTORY import INVENTORY
+from motd import motd
+from motd import exit
 
-print "Byron Lagrone proudly presents"
-print "a Proof of Concept application"
-print "  Text Adventure Engine Test"
-print "(c) 2012"
-print ""
-quit = False 		# has the user quit the game?
+motd() #display the introductory message defined in motd.py
+
+quit = False		# has the user quit the game?
 countdownToLook = 0	# how many 'ticks' until the room description should be displayed
 
-while quit != True:
+while not quit:
 	success = False # Was (T)the user's command successful or (F)should we display an error?
 	if countdownToLook <= 0:
 		countdownToLook = 5 #number of commands before looking again	
-		print ROOMDB.ROOMDB.description
+		print ROOMDB.ROOMDB.description # show the room's description
+		# then, describe objects in room:
 		if len(ROOMDB.ROOMDB.objects) == 1:
 			print "You see " + ROOMDB.ROOMDB.objects[0]._description + "."
 		elif len(ROOMDB.ROOMDB.objects) > 1:
@@ -36,6 +36,7 @@ while quit != True:
 					print "\b."
 				else:
 					print "\b,",
+	#TODO: refactor if order of command parse for efficiency
 	inp = raw_input(">").lower() #acquire user input and handle
 	if inp == "quit":
 		quit = True
@@ -44,7 +45,7 @@ while quit != True:
 		print "If you'd like to stop playing, type 'quit'. If you'd like to exit the room, type 'go ' followed by a room exit."
 	else:
 		words = inp.split() #Array of single words from inp, i.e. ["go", "west", "dumby"]
-		mode = 0 # what command we are interpreting; 0 is not recognized
+		mode = 0 # what command we are interpreting; 0 is not yet recognized or invalid command
 		for (counter, word) in enumerate(words):
 			if mode == 0: #efficiency -- only check this if mode isn't already decided
 				if word == "go" or word == "walk" or word=="north" or word=="south" or word=="east" or word=="west":
@@ -64,26 +65,33 @@ while quit != True:
 					countdownToLook = 0
 				elif word == "sudo":
 					mode = -4
-			if mode == 1:
-				if ROOMDB.ROOMDB.go(word) >= 0: #TODO: Check efficiency of .lower()
-					success = True			#TODO: better idea: lower before for
+			if mode == 1: # user is trying to change rooms
+				var = ROOMDB.ROOMDB.go(word)
+				if var >= 0:
+					success = True
 					countdownToLook = 0
 					mode = 0
 					break
-			elif mode == 2:
+				elif var == -2:
+					success = True
+					print "\nThat exit is locked!\n\n"
+					mode = 0
+					break
+			elif mode == 2: # user is trying to acquire an object
 				index = ROOMDB.ROOMDB.get(word)
 				if index >= 0:
 					success = True
 					mode = 0
 					INVENTORY.add(ROOMDB.OBJECTDB[index])
+					print "\nYou got the " + ROOMDB.OBJECTDB[index]._word + "!\n\n"
 					break
-			elif mode == 9: #converse!
+			elif mode == 9: # user is trying to talk to someone
 				for(counter, obj) in enumerate(ROOMDB.OBJECTDB):
 					if word == ROOMDB.OBJECTDB[counter]._word:
 						if ROOMDB.OBJECTDB[counter].talk() >= 0:
 							success = True
 							break
-		if success != True:
+		if not success: #handle unsuccessful input / invalid command from user
 			if mode == 1:
 				print "You tried to " + inp + ", but no such exit exists. Everyone was sad. Especially me."
 			elif mode == 2:

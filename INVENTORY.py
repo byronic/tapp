@@ -3,9 +3,9 @@
 #  and use them.
 #
 # TAPP
-# COMPANY_NAME
+# Tidy Productions / Shiny Bitter Studios
 # Byron L Lagrone
-#
+# Mike Robertson
 
 #handles storage of player inventory; no logic
 class INVENTORY:
@@ -39,4 +39,10 @@ class INVENTORY:
 				INVENTORY._objects.pop(counter)
 				return True
 		return False
-		
+
+	@staticmethod
+	def hasObject(oID): #does the player have object with GUID = oID?
+		for obj in INVENTORY._objects:
+			if obj._GUID == oID:
+				return True
+		return False

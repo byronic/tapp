@@ -25,11 +25,13 @@ class OBJECT:
 	_description = "a generic object, surprising in its sameness."
 	_word = "generic_object"# one-word object name, as it would appear in inventory or on the ground
 	_roomID = -99		# the room the object is in (if _inRoom is true; otherwise ignored)
+	_GUID = -99		# Globally Unique Identifier -- corresponds to the position in ROOMDB.OBJECTDB array
 
-	def define(obj, word, desc, roomID): # modify an object on the fly
+	def define(obj, word, desc, roomID, guid): # modify an object on the fly
 		obj._word = word
 		obj._description = desc
 		obj._roomID = roomID
+		obj._GUID = guid
 
 	def use(obj):
 		if obj._canUse:
