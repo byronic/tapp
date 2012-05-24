@@ -46,3 +46,10 @@ class INVENTORY:
 			if obj._GUID == oID:
 				return True
 		return False
+
+	@staticmethod
+	def getObjectWord(oID): #does the player have object with GUID = oID?
+		for obj in INVENTORY._objects:
+			if obj._GUID == oID:
+				return obj._word
+		return "unknown object"

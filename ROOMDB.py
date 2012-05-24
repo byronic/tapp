@@ -53,7 +53,12 @@ class ROOMDB:
 			return ROOMDB.roomID	
 		for (counter, txt) in enumerate(ROOMDB.exits):		
 			if txt == _exit:
-				if (ROOMDB.locks[counter] == 0) or INVENTORY.hasObject(ROOMDB.locks[counter]):
+				if (ROOMDB.locks[counter] == 0):
+					_returner = ROOMDB.exitIDs[counter]
+					ROOMDB.change(ROOMDB.exitIDs[counter])
+					return _returner
+				elif INVENTORY.hasObject(ROOMDB.locks[counter]):
+					print "\nYou unlocked the " + ROOMDB.exits[counter] + " exit with the " + INVENTORY.getObjectWord(ROOMDB.locks[counter]) + "!\n\n"
 					_returner = ROOMDB.exitIDs[counter]
 					ROOMDB.change(ROOMDB.exitIDs[counter])
 					return _returner
@@ -94,7 +99,7 @@ class ROOMDB:
 			ROOMDB.exits = ['west','north','east', 'dennis']
 			ROOMDB.exitIDs = [0, 3, 2, 94]
 			ROOMDB.description = "You are standing in a dark room. Obvious exits are {0}, {1}, {2} and {e}.".format(ROOMDB.exits[0], ROOMDB.exits[1], ROOMDB.exits[2], e=ROOMDB.exits[3])
-			ROOMDB.locks = [0, 0, 0, 0]
+			ROOMDB.locks = [2, 0, 0, 0]
 		else:
 			ROOMDB.exits = ['none']
 			ROOMDB.exitIDs = [-1]
