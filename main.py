@@ -102,4 +102,4 @@ while not quit:
 				print "Much to your chagrin, you can't " + inp
 		countdownToLook -= 1
 
-print "Exiting... thanks for playing!"
+exit() # print exit message defined in motd.py
