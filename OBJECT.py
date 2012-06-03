@@ -39,8 +39,10 @@ class OBJECT:
 		else:
 			print "Oh no! You can't use that object."
 
+	# I don't think acquire() is ever referenced and frankly I'm not sure it should be	
 	def acquire(obj):
 		if obj._canAcquire:
+			print "\n\n" + obj._word + " got acquired!!!!!!!!\n\n\n"
 			obj._inRoom = False
 			return True
 		else:

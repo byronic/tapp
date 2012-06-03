@@ -17,7 +17,7 @@ from INVENTORY import INVENTORY
 # To add more objects, add an OBJECT() to the OBJECTDB = [ definition, and then define it in the list. The game will take care of the rest. Note the room ID must be valid, or your object never shows up.
 # IMPORTANT NOTE: THE FIRST THING YOU PASS TO DEFINE (word) MUST BE ALL LOWER CASE.
 # 			TODO: ^^^^^^^^^^^^^ fix the lower case requirement so that people names make sense
-OBJECTDB = [ OBJECT(), OBJECT(), OBJECT(), OBJECT() ]
+OBJECTDB = [ OBJECT(), OBJECT(), OBJECT(), OBJECT(), OBJECT() ]
 OBJECTDB[0].define("cat", "a cat, apparently answering to Muffin", 94, 0)
 OBJECTDB[0]._canAcquire = True
 OBJECTDB[1].define("tree", "a tree, unwilling to bend to your 'rules'", 94, 1)
@@ -26,6 +26,10 @@ OBJECTDB[2]._canAcquire = True
 OBJECTDB[3].define("alice", "an Alice, ostensibly charming", 0, 3)
 OBJECTDB[3]._canTalk = True
 OBJECTDB[3]._conversationID = -99
+OBJECTDB[4].define("hammock", "Joe the hammock", 3, 4)
+OBJECTDB[4]._canTalk = True
+OBJECTDB[4]._canAcquire = True
+
 
 class ROOMDB:
 #note that these are default values for example game
@@ -116,17 +120,25 @@ class ROOMDB:
 			if obj._inRoom:
 				if obj._roomID == rID:
 					ROOMDB.objects.append(OBJECTDB[counter])
+			else: #this is to test, please remove
+				print "_inRoom is false, somehow, for " + obj._word
 
 	@staticmethod
 	def get(objword): #if an object is in the room and acquirable, sets related object package and returns True, otherwise returns False!
 		for (counter, obj) in enumerate(ROOMDB.objects):
 			if objword == obj._word:
 				if obj._inRoom and obj._canAcquire:
-					ROOMDB.objects[counter]._inRoom = False
-					ROOMDB.objects[counter]._roomID = -99
+					returner = ROOMDB.objects[counter]._GUID
+					# for testing:
+					OBJECTDB[returner]._inRoom = False
+					OBJECTDB[returner]._roomID = -99
+					
 # added ROOMDB.objects.pop(counter) to resolve objects-in-room-description after being picked up bug
+# BUG: TODO: check to see if changing return counter to return ROOMDB.objects[counter].GUID (space in objects database)
+#            and don't forget that the objects database might not be correctly changing _inRoom and _roomID vals
+# TODO: Check efficiency of this
 					ROOMDB.objects.pop(counter)
-					return counter
+					return returner
 		return -99
 	
 # if(go to string is exit[0] (NORTH)) set active room to exitID[0] (i.e. 59 or w/e)
